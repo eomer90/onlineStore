@@ -48,23 +48,39 @@ const CartWindow = ({
           </>
         ) : (
           <>
-            {cart.map((product) => (
-              <div key={product.id}>
+            {cart.map((product, index) => (
+              <div key={`${product.id}-${index}`} className={styles.cartItem}>
                 <div className={styles.imgPriceList}>
-                  <img src={product.images} alt={product.title} className={styles.imageCart} />
+                  <img
+                    src={product.images}
+                    alt={product.title}
+                    className={styles.imageCart}
+                  />
                   <p>{product.title}</p>
                 </div>
+
                 <p>${product.price} each</p>
+
                 <div className={styles.qtyBox}>
-                  <button onClick={() => decreaseQuantity(product.id)} className={styles.qtyButton}>
+                  <button
+                    onClick={() => decreaseQuantity(product.id)}
+                    className={styles.qtyButton}
+                  >
                     -
                   </button>
                   <span className={styles.qtyNumber}>{product.quantity}</span>
-                  <button onClick={() => increaseQuantity(product.id)} className={styles.qtyButton}>
+                  <button
+                    onClick={() => increaseQuantity(product.id)}
+                    className={styles.qtyButton}
+                  >
                     +
                   </button>
                 </div>
-                <button onClick={() => removeProduct(product.id)} className={styles.removeButton}>
+
+                <button
+                  onClick={() => removeProduct(product.id)}
+                  className={styles.removeButton}
+                >
                   Remove
                 </button>
               </div>

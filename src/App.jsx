@@ -16,48 +16,42 @@ function App() {
   }, []);
 
   const addProductToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+    setCart((prevCart) => {
+      const existing = prevCart.find((p) => p.id === product.id);
+      if (existing) {
+        return prevCart.map((p) =>
+          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+        );
+      } else {
+        return [...prevCart, { ...product, quantity: 1 }];
+      }
+    });
   };
 
-  const productMap = new Map();
-  for (const product of cart) {
-    if (productMap.has(product.id)) {
-      productMap.get(product.id).quantity += 1;
-    } else {
-      productMap.set(product.id, { ...product, quantity: 1 });
-    }
-  }
-  const groupedCart = Array.from(productMap.values());
-
-  const total = groupedCart.reduce(
-    (acc, product) => acc + product.price * product.quantity,
-    0
-  );
-
-  const totalItems = groupedCart.reduce((acc, product) => acc + product.quantity, 0);
-
   const increaseQuantity = (productId) => {
-    const found = products.find((p) => p.id === productId);
-    if (found) {
-      setCart((prevCart) => [...prevCart, found]);
-    }
+    setCart((prevCart) =>
+      prevCart.map((p) =>
+        p.id === productId ? { ...p, quantity: p.quantity + 1 } : p
+      )
+    );
   };
 
   const decreaseQuantity = (productId) => {
-    setCart((prevCart) => {
-      const index = prevCart.findIndex((p) => p.id === productId);
-      if (index !== -1) {
-        const newCart = [...prevCart];
-        newCart.splice(index, 1);
-        return newCart;
-      }
-      return prevCart;
-    });
+    setCart((prevCart) =>
+      prevCart
+        .map((p) =>
+          p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
+        )
+        .filter((p) => p.quantity > 0)
+    );
   };
 
   const removeProduct = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
+
+  const total = cart.reduce((acc, p) => acc + p.price * p.quantity, 0);
+  const totalItems = cart.reduce((acc, p) => acc + p.quantity, 0);
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -67,7 +61,7 @@ function App() {
     <>
       <CartWindow
         totalItems={totalItems}
-        cart={groupedCart}
+        cart={cart}
         total={total}
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}

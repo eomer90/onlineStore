@@ -36,6 +36,17 @@
   gap: 16px;
 }
 
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .card {
   background: white;
   border-radius: 12px;
